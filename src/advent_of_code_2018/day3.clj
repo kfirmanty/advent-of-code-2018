@@ -1,5 +1,6 @@
 (ns advent-of-code-2018.day3
-  (:require [instaparse.core :as insta]))
+  (:require [instaparse.core :as insta]
+            [advent-of-code-2018.common :as common]))
 
 (def input-parser (insta/parser
                    "
@@ -24,17 +25,11 @@ ws=#'\\s+'"))
        (group-by (fn [[x y _]] [x y]))
        vals))
 
-(defn parse-input [i]
-  (->> (clojure.string/split i #"\n")
-       (map input-parser)
-       (map (fn [p] (insta/transform {:number #(Integer/parseInt %)} p)))
-       (map #(into {} %))))
-
 (defn already-claimed? [v]
   (> (count v) 1))
 
 (defn solve-1 [i]
-  (let [pixels (-> i parse-input pixels)
+  (let [pixels (-> i (common/parse-input input-parser) pixels)
         claimed (->> pixels (map #(if (already-claimed? %)
                                     1
                                     0))
@@ -45,12 +40,12 @@ ws=#'\\s+'"))
   (nth v 2))
 
 (defn solve-2 [i]
-  (let [parsed (parse-input i)
+  (let [parsed (common/parse-input i input-parser)
         claims (->> parsed (map :claim)
-                    (into #{}))
+                        (into #{}))
         overlapping (->> parsed pixels
-                         (map #(if (already-claimed? %) (map third %) nil))
-                         (filter some?)
-                         flatten
-                         (into #{}))]
+                             (map #(if (already-claimed? %) (map third %) nil))
+                             (filter some?)
+                             flatten
+                             (into #{}))]
     (clojure.set/difference claims overlapping)))
