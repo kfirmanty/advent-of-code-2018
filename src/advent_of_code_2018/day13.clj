@@ -1,4 +1,5 @@
-(ns advent-of-code-2018.day13)
+(ns advent-of-code-2018.day13
+  (:require [advent-of-code-2018.common :as c]))
 
 {:carts [{:dir [0 1]
           :pos [0 0]
@@ -109,13 +110,7 @@
       (assoc-in state [:carts (:id cart)] ncart))))
 
 (defn carts-in-order [state]
-  (sort (fn [c1 c2] (let [[x1 y1] (:pos c1)
-                          [x2 y2] (:pos c2)]
-                      (cond (< y1 y2) -1
-                            (> y1 y2) 1
-                            (< x1 x2) -1
-                            (> x1 x2) 1
-                            :else 0))) (vals (:carts state))))
+  (sort c/aoc-comparator (vals (:carts state))))
 
 (defn tick [state]
   (let [sorted (carts-in-order state)]

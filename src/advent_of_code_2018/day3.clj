@@ -1,6 +1,7 @@
 (ns advent-of-code-2018.day3
   (:require [instaparse.core :as insta]
-            [advent-of-code-2018.common :as common]))
+            [advent-of-code-2018.common :as common]
+            [clojure.set :as set]))
 
 (def input-parser (insta/parser
                    "
@@ -48,4 +49,4 @@ ws=#'\\s+'"))
                              (filter some?)
                              flatten
                              (into #{}))]
-    (clojure.set/difference claims overlapping)))
+    (set/difference claims overlapping)))
